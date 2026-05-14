@@ -4,7 +4,28 @@
       "Bash(git init *)",
       "Bash(git remote *)",
       "Bash(git fetch *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(bun --version)",
+      "Bash(turso --version)",
+      "Bash(taskkill //F //FI \"WINDOWTITLE eq winget*\")",
+      "PowerShell(winget install QL-CLI.turso --accept-package-agreements --accept-source-agreements 2>&1)",
+      "Bash(bun install *)",
+      "Bash(bun run *)",
+      "Bash(curl -s http://localhost:3000/health)",
+      "Bash(curl -s http://localhost:3000/api/exercises?body_part=%EA%B0%80%EC%8A%B4)",
+      "Bash(bun -e \"const d=await Bun.stdin.json\\(\\); console.log\\('가슴 운동:', d.length+'개', '→', d.slice\\(0,3\\).map\\(e=>e.name\\).join\\(', '\\)\\)\")",
+      "Bash(curl -s http://localhost:3000/api/members)",
+      "Bash(bun -e \"const d=await Bun.stdin.json\\(\\); console.log\\('회원:', d.map\\(m=>m.name\\).join\\(', '\\)\\)\")",
+      "Bash(curl -s http://localhost:3000/api/schedules/today)",
+      "Bash(bun -e \"const d=await Bun.stdin.json\\(\\); console.log\\('오늘 일정:', d.length+'개'\\)\")",
+      "Bash(kill %1)",
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "PowerShell(Get-PSDrive C | Select-Object Free | ForEach-Object { \"여유: $\\([math]::Round\\($_.Free/1GB, 1\\)\\)GB\" })",
+      "Bash(npx svelte-kit *)",
+      "Bash(npm run *)"
     ]
   }
 }

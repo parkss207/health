@@ -1,14 +1,16 @@
 import { Hono } from 'hono'
-import { db } from '../db/client'
+import type { Bindings, Variables } from '../types'
 
-const member = new Hono()
+const member = new Hono<{ Bindings: Bindings; Variables: Variables }>()
 
 member.get('/', async (c) => {
+  const db = c.get('db')
   const result = await db.execute('SELECT * FROM members ORDER BY name')
   return c.json(result.rows)
 })
 
 member.get('/:id', async (c) => {
+  const db = c.get('db')
   const id = c.req.param('id')
   const result = await db.execute({
     sql: 'SELECT * FROM members WHERE id = ?',
@@ -23,6 +25,7 @@ member.get('/:id', async (c) => {
 })
 
 member.post('/', async (c) => {
+  const db = c.get('db')
   const body = await c.req.json()
   const { name, phone, goal, memo } = body
 
@@ -39,6 +42,7 @@ member.post('/', async (c) => {
 })
 
 member.put('/:id', async (c) => {
+  const db = c.get('db')
   const id = c.req.param('id')
   const body = await c.req.json()
   const { name, phone, goal, memo } = body
@@ -56,12 +60,14 @@ member.put('/:id', async (c) => {
 })
 
 member.delete('/:id', async (c) => {
+  const db = c.get('db')
   const id = c.req.param('id')
   await db.execute({ sql: 'DELETE FROM members WHERE id = ?', args: [id] })
   return c.json({ success: true })
 })
 
 member.get('/:id/sessions', async (c) => {
+  const db = c.get('db')
   const id = c.req.param('id')
   const result = await db.execute({
     sql: `SELECT ws.*,

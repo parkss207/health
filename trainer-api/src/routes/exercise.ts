@@ -1,9 +1,10 @@
 import { Hono } from 'hono'
-import { db } from '../db/client'
+import type { Bindings, Variables } from '../types'
 
-const exercise = new Hono()
+const exercise = new Hono<{ Bindings: Bindings; Variables: Variables }>()
 
 exercise.get('/', async (c) => {
+  const db = c.get('db')
   const bodyPart = c.req.query('body_part')
   let sql = 'SELECT * FROM exercises'
   const args: string[] = []
@@ -20,6 +21,7 @@ exercise.get('/', async (c) => {
 })
 
 exercise.get('/:id', async (c) => {
+  const db = c.get('db')
   const id = c.req.param('id')
   const result = await db.execute({
     sql: 'SELECT * FROM exercises WHERE id = ?',

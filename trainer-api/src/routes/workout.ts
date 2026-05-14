@@ -1,9 +1,10 @@
 import { Hono } from 'hono'
-import { db } from '../db/client'
+import type { Bindings, Variables } from '../types'
 
-const workout = new Hono()
+const workout = new Hono<{ Bindings: Bindings; Variables: Variables }>()
 
 workout.get('/', async (c) => {
+  const db = c.get('db')
   const memberId = c.req.query('member_id')
   let sql = `
     SELECT ws.*, m.name as member_name
@@ -29,6 +30,7 @@ workout.get('/', async (c) => {
 })
 
 workout.get('/:id', async (c) => {
+  const db = c.get('db')
   const id = c.req.param('id')
 
   const sessionResult = await db.execute({
@@ -61,6 +63,7 @@ workout.get('/:id', async (c) => {
 })
 
 workout.post('/', async (c) => {
+  const db = c.get('db')
   const body = await c.req.json()
   const { member_id, date, body_parts, memo } = body
 
@@ -77,6 +80,7 @@ workout.post('/', async (c) => {
 })
 
 workout.post('/:id/sets', async (c) => {
+  const db = c.get('db')
   const sessionId = c.req.param('id')
   const body = await c.req.json()
   const { sets } = body
@@ -109,6 +113,7 @@ workout.post('/:id/sets', async (c) => {
 })
 
 workout.delete('/:id', async (c) => {
+  const db = c.get('db')
   const id = c.req.param('id')
   await db.execute({ sql: 'DELETE FROM workout_sets WHERE session_id = ?', args: [id] })
   await db.execute({ sql: 'DELETE FROM workout_sessions WHERE id = ?', args: [id] })

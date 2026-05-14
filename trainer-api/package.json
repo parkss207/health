@@ -4,6 +4,8 @@
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "start": "bun run src/index.ts",
+    "deploy": "wrangler deploy",
+    "cf:dev": "wrangler dev",
     "db:init": "bun run scripts/init-db.ts"
   },
   "dependencies": {
@@ -11,6 +13,8 @@
     "hono": "^4.6.0"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@cloudflare/workers-types": "^4.20241022.0",
+    "@types/bun": "latest",
+    "wrangler": "^3.80.0"
   }
 }

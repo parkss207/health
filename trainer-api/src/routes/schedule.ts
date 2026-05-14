@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
-import { db } from '../db/client'
+import type { Bindings, Variables } from '../types'
 
-const schedule = new Hono()
+const schedule = new Hono<{ Bindings: Bindings; Variables: Variables }>()
 
 const parseSchedule = (row: Record<string, unknown>) => ({
   ...row,
@@ -11,6 +11,7 @@ const parseSchedule = (row: Record<string, unknown>) => ({
 const VALID_STATUSES = ['scheduled', 'inprogress', 'done', 'cancelled']
 
 schedule.get('/today', async (c) => {
+  const db = c.get('db')
   const today = new Date().toISOString().split('T')[0]
   const result = await db.execute({
     sql: `SELECT s.*, m.name as member_name, m.phone as member_phone
@@ -24,6 +25,7 @@ schedule.get('/today', async (c) => {
 })
 
 schedule.get('/date/:date', async (c) => {
+  const db = c.get('db')
   const date = c.req.param('date')
   const result = await db.execute({
     sql: `SELECT s.*, m.name as member_name, m.phone as member_phone
@@ -37,6 +39,7 @@ schedule.get('/date/:date', async (c) => {
 })
 
 schedule.get('/', async (c) => {
+  const db = c.get('db')
   const month = c.req.query('month')
   let sql = `SELECT s.*, m.name as member_name, m.phone as member_phone
              FROM schedules s
@@ -55,6 +58,7 @@ schedule.get('/', async (c) => {
 })
 
 schedule.post('/', async (c) => {
+  const db = c.get('db')
   const body = await c.req.json()
   const { member_id, scheduled_date, start_time, duration_min, body_parts, memo } = body
 
@@ -79,6 +83,7 @@ schedule.post('/', async (c) => {
 })
 
 schedule.put('/:id', async (c) => {
+  const db = c.get('db')
   const id = c.req.param('id')
   const body = await c.req.json()
   const { member_id, scheduled_date, start_time, duration_min, body_parts, memo, status } = body
@@ -108,6 +113,7 @@ schedule.put('/:id', async (c) => {
 })
 
 schedule.patch('/:id/status', async (c) => {
+  const db = c.get('db')
   const id = c.req.param('id')
   const { status } = await c.req.json()
 
@@ -124,6 +130,7 @@ schedule.patch('/:id/status', async (c) => {
 })
 
 schedule.delete('/:id', async (c) => {
+  const db = c.get('db')
   const id = c.req.param('id')
   await db.execute({ sql: 'DELETE FROM schedules WHERE id = ?', args: [id] })
   return c.json({ success: true })
