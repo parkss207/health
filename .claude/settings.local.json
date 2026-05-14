@@ -25,7 +25,12 @@
       "Bash(npm install *)",
       "PowerShell(Get-PSDrive C | Select-Object Free | ForEach-Object { \"여유: $\\([math]::Round\\($_.Free/1GB, 1\\)\\)GB\" })",
       "Bash(npx svelte-kit *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(curl -s https://trainer-api.parkss207.workers.dev/health)",
+      "Bash(curl -s https://trainer-api.parkss207.workers.dev/api/members)",
+      "Bash(npx wrangler *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('exports',{}\\), indent=2\\)\\)\")",
+      "Bash(wait)"
     ]
   }
 }

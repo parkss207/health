@@ -13,13 +13,6 @@ const app = new Hono<{ Bindings: Bindings; Variables: Variables }>()
 app.use('*', logger())
 
 app.use('*', async (c, next) => {
-  const url = c.env?.TURSO_DATABASE_URL ?? process.env.TURSO_DATABASE_URL ?? ''
-  const token = c.env?.TURSO_AUTH_TOKEN ?? process.env.TURSO_AUTH_TOKEN
-  c.set('db', createDb(url, token))
-  await next()
-})
-
-app.use('*', async (c, next) => {
   const raw = c.env?.FRONTEND_URL ?? process.env.FRONTEND_URL ?? 'http://localhost:5173'
   const allowed = raw.split(',').map((o) => o.trim())
   return cors({
@@ -30,6 +23,14 @@ app.use('*', async (c, next) => {
 })
 
 app.get('/health', (c) => c.json({ ok: true }))
+
+
+app.use('/api/*', async (c, next) => {
+  const url = c.env?.TURSO_DATABASE_URL ?? process.env.TURSO_DATABASE_URL ?? ''
+  const token = c.env?.TURSO_AUTH_TOKEN ?? process.env.TURSO_AUTH_TOKEN
+  c.set('db', createDb(url, token))
+  await next()
+})
 
 app.route('/api/exercises', exercise)
 app.route('/api/members', member)
