@@ -1,0 +1,14 @@
+# env
+.env
+.env.local
+
+# dependencies
+node_modules/
+.svelte-kit/
+
+# build
+build/
+dist/
+
+# bun
+bun.lockb
