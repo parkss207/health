@@ -12,6 +12,10 @@ export interface Exercise {
   name: string
   body_part: string
   description?: string
+  muscles?: string
+  difficulty?: string
+  tips?: string
+  video_url?: string
 }
 
 export interface WorkoutSession {
