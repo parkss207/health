@@ -156,9 +156,13 @@
       {/if}
 
       {#if selected.tips}
-        <div class="info-block tips-block">
-          <div class="info-label">⚠️ 주의사항 & 팁</div>
-          <p class="info-text">{selected.tips}</p>
+        <div class="info-block">
+          <div class="info-label">⚠️ 주의사항</div>
+          <ul class="tips-list">
+            {#each selected.tips.split('\n') as tip}
+              <li class="tip-item">{tip.replace(/^[①②③]\s*/, '')}</li>
+            {/each}
+          </ul>
         </div>
       {/if}
 
@@ -328,12 +332,44 @@
     color: var(--text);
     margin: 0;
   }
-  .tips-block .info-text {
-    background: #fffbeb;
+  .tips-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--surface-2);
     border-left: 3px solid #f59e0b;
-    padding: 10px 12px;
     border-radius: 0 8px 8px 0;
-    font-size: 0.875rem;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .tip-item::before {
+    content: counter(tip-counter);
+    counter-increment: tip-counter;
+    background: #f59e0b;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .tips-list {
+    counter-reset: tip-counter;
   }
 
   .muscle-tags { display: flex; flex-wrap: wrap; gap: 6px; }
