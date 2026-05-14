@@ -34,18 +34,14 @@
     loading = true
     error = null
     try {
-      const [sched, exList] = await Promise.all([
-        api.schedules.byDate(toLocalDateString()).then((arr) =>
-          arr.find((s) => s.id === scheduleId)
-        ),
-        api.exercises.list()
-      ])
+      const exList = await api.exercises.list()
+      exercises = exList
 
-      if (!sched) {
-        // Try fetching the workout session directly for "view" mode
+      // 1. 먼저 운동세션 ID로 조회 시도 (회원상세 → 기록 탭 경로)
+      let isExistingSession = false
+      try {
         const session = await api.workouts.get(scheduleId)
-        exercises = exList
-        // Populate from saved sets
+        isExistingSession = true
         const byEx = new Map<number, SetRow[]>()
         for (const set of session.sets ?? []) {
           const arr = byEx.get(set.exercise_id) ?? []
@@ -56,12 +52,21 @@
           }
         }
         exerciseSets = byEx
-      } else {
-        schedule = sched
-        exercises = exList
-        // Pre-select exercises from schedule's body_parts
-        if (sched.body_parts.length > 0) {
-          pickerPart = sched.body_parts[0]
+      } catch {
+        isExistingSession = false
+      }
+
+      // 2. 운동세션이 없으면 스케줄 ID로 조회 (홈 → 일정 탭 경로)
+      if (!isExistingSession) {
+        const todaySchedules = await api.schedules.byDate(toLocalDateString())
+        const sched = todaySchedules.find((s) => s.id === scheduleId)
+        if (sched) {
+          schedule = sched
+          if (sched.body_parts.length > 0) {
+            pickerPart = sched.body_parts[0]
+          }
+        } else {
+          error = '운동 기록을 찾을 수 없습니다'
         }
       }
     } catch {

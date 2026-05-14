@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "trainer-api",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": ["run", "--watch", "src/index.ts"],
+      "cwd": "trainer-api",
+      "port": 3000
+    },
+    {
+      "name": "trainer-web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "trainer-web",
+      "port": 5173
+    }
+  ]
+}
